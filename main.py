@@ -1,3 +1,4 @@
+from ctypes import alignment
 from tkinter import *
 import random as rd
 # ---------------------------- CONSTANTS ------------------------------- #
@@ -41,14 +42,14 @@ class Table:
         self.ucmactest()
         total_rows = len(self.lst)
         for i in range(total_rows):
-            self.e = Entry(self.root, width=5, fg='blue', bg=YELLOW,
+            self.e = Entry(self.root, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
 
             self.e.grid(row=i+self.row, column=self.column)
             if not starting:
                 self.e.insert(END, self.lst[i])
             self.e.configure(state=DISABLED)
-        self.ans = Entry(self.root, width=5, fg='blue',bg=YELLOW,
+        self.ans = Entry(self.root, width=5, fg='blue',bg=YELLOW,justify='center',
                          font=('Arial', 16, 'bold'))
         self.ans.grid(row=total_rows + self.row+1, column=self.column)
         if not starting:
