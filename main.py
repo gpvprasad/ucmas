@@ -10,7 +10,7 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-SECOND_MS = 10
+SECOND_MS = 1000
 
 # Python program to create a table
 
