@@ -3,7 +3,7 @@ from tkinter import *
 import random as rd
 import csv
 import pandas as pd
-
+from ShowResult import disp_csv
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -37,7 +37,7 @@ class Table:
         self.problems = 0
         self.score = 0
         self.insert_table(True)
-        print('insert table called init')
+        #print('insert table called init')
 
     def ucmactest(self,starting):
         
@@ -60,7 +60,7 @@ class Table:
         # code for creating table
         self.ucmactest(starting)
         total_rows = len(self.lst)
-        print(total_rows)
+        #print(total_rows)
         for i in range(total_rows):
             self.e = Entry(self.root, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
@@ -84,7 +84,7 @@ class Table:
 
 
     def key_handler(self,event):
-        print(event.char, event.keysym, event.keycode)
+        #print(event.char, event.keysym, event.keycode)
         self.ans.insert(0,event.char)
         maths_answersheet['answer'][-1]=int(event.char)
         if sum(self.lst) == int(event.char):
@@ -98,11 +98,12 @@ class Table:
         e2.configure(state=NORMAL)
         df = pd.DataFrame(maths_answersheet)
         df.to_csv('test.csv', index = False)
-        print(maths_answersheet)
+        #print(maths_answersheet)
+        k = disp_csv()
 
     def __del__(self):
         self.root.after_cancel(self.timer)
-        print("Object deleted")
+        #print("Object deleted")
 
 states = {
     '8_1':{'Nextstates': 'ShowResult','values': 8*60}
@@ -127,7 +128,7 @@ def func_reset_count(count=-1,state='Nokey'):
     elif count == -1 and timer == None:
         if t == None:
             t = Table(window, row=3, column=1)
-        print('insert table called first time')
+        #print('insert table called first time')
         t.insert_table()
         state = '8_1'
         count = states[state]['values']
@@ -146,7 +147,7 @@ def func_stop():
     canvas.itemconfig(timer_text, text=f'00:00')
     timer = None
     t.show_score()
-    print(t)
+    #print(t)
     window.unbind("<Key>")
     del t
     t= None
@@ -183,14 +184,14 @@ mathstution_label.grid(row = 1,column=3)
 e1 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
 e1.grid(row=2, column=0)
-e1.insert(END,'')
+e1.insert(END,'1')
 
 var2 = IntVar()
 var2.trace("w", callback)
 e2 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'),textvariable=var2)
 e2.grid(row=2, column=3)
-e2.insert(END,'')
+e2.insert(END,'9')
 
 start_button = Button(text='Start',command=func_reset_count)
 start_button.grid(column=1,row=2)
