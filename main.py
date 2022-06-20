@@ -1,16 +1,20 @@
 from ctypes import alignment
 from tkinter import *
+from tkinter import messagebox
 import random as rd
 import csv
 import pandas as pd
 from ShowResult import disp_csv
+from quiz import quizformat
+import json
+
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-SECOND_MS = 1000
+SECOND_MS = 10
 
 # Python program to create a table
 
@@ -22,7 +26,58 @@ maths_answersheet = {
     'correct answer':[],
     'status':[]
 }
+class Point:
+    target: int
+    lst: list[int]
 
+def openQuizUi():
+    var = Point()
+    var.target = int(e3.get())
+    var.lst = []
+    options = []
+    data = {
+        "question": [],
+        "answer": [],
+        "options": []
+    }
+    for i in range(var.target):
+        options = []
+        ucmactest(var,False)
+        question = str(var.lst[0])
+        for i in var.lst[1:]:
+            if i<0:
+                question += str(i)
+            else:
+                question += '+'+str(i)
+        data['question'].append(question)
+        options.append(sum(var.lst))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i != sum(var.lst)]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i != sum(var.lst)]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i != sum(var.lst)]))
+        rd.shuffle(options)
+        data['options'].append(options )
+        data['answer'].append(options.index(sum(var.lst))+1)
+    with open("data.json", "w") as outfile:
+        json.dump(data, outfile,indent=4)
+    
+    quizformat(window)
+
+def ucmactest(self,starting):
+    self.target = int(e3.get())
+    if not starting:
+        e1.configure(state=DISABLED)
+        e2.configure(state=DISABLED)
+        e3.configure(state=DISABLED)
+
+        self.lst = [0]*(int(e1.get())+2)
+        finalmaxsum = int(e2.get())
+    else:
+        self.lst = [0]*3
+        finalmaxsum = 9
+    
+    self.lst[0] = rd.randint(0,finalmaxsum)
+    for i in range(1,len(self.lst)):
+        self.lst[i] = rd.randint(-sum(self.lst),finalmaxsum-sum(self.lst))
 
 class Table:
 
@@ -37,28 +92,16 @@ class Table:
         self.problems = 0
         self.score = 0
         self.insert_table(True)
+        self.target = int(e3.get())
         #print('insert table called init')
 
-    def ucmactest(self,starting):
-        
-        if not starting:
-            e1.configure(state=DISABLED)
-            e2.configure(state=DISABLED)
-            self.lst = [0]*(int(e1.get())+2)
-            finalmaxsum = int(e2.get())
-        else:
-            self.lst = [0]*3
-            finalmaxsum = 9
-        
-        self.lst[0] = rd.randint(0,finalmaxsum)
-        for i in range(1,len(self.lst)):
-            self.lst[i] = rd.randint(-sum(self.lst),finalmaxsum-sum(self.lst))
+    
 
     def insert_table(self,starting = False):
         if self.timer != None:
             self.root.after_cancel(self.timer)
         # code for creating table
-        self.ucmactest(starting)
+        ucmactest(self,starting)
         total_rows = len(self.lst)
         #print(total_rows)
         for i in range(total_rows):
@@ -93,7 +136,7 @@ class Table:
         self.timer = self.root.after(SECOND_MS//5, self.insert_table)
 
     def show_score(self):
-        canvas.itemconfig(timer_text, text=f'{self.score}/{self.problems}')
+        canvas.itemconfig(timer_text, text=f'{self.score}/{self.problems}/{self.target}')
         e1.configure(state=NORMAL)
         e2.configure(state=NORMAL)
         df = pd.DataFrame(maths_answersheet)
@@ -117,6 +160,11 @@ def func_reset_count(count=-1,state='Nokey'):
     #print(f'{count} {state}')
     global timer
     global t
+    if int(e2.get())>9:
+        switchtoquiz = messagebox.askokcancel("askokcancel", "Total greater than 9, not possible in this window Want to continue to quiz format?")
+        if switchtoquiz == 1:
+            openQuizUi()
+
     if state != 'Nokey' and timer == None:
         canvas.itemconfig(timer_text, text=f'00:00')
     elif(count>0):
@@ -153,15 +201,6 @@ def func_stop():
     t= None
     mathstution_label.config(text='mathstution')
 
-def callback(*args):
-    try:
-        if int(e2.get())>9:
-            e2.delete(0,END)
-            e2.insert(END,'9')
-    except ValueError:
-        return
-
-
 window = Tk()
 window.title('mathstution')
 window.config(padx=100,pady=50,bg=YELLOW)
@@ -186,16 +225,25 @@ e1 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
 e1.grid(row=2, column=0)
 e1.insert(END,'1')
 
-var2 = IntVar()
-var2.trace("w", callback)
+
 e2 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
-                           font=('Arial', 16, 'bold'),textvariable=var2)
+                           font=('Arial', 16, 'bold'))
 e2.grid(row=2, column=3)
 e2.insert(END,'9')
 
 start_button = Button(text='Start',command=func_reset_count)
 start_button.grid(column=1,row=2)
 
+Label(window, 
+         text="Target").grid(row=3,column=0)
+e3 = Entry(window,width=5, fg='blue', bg=YELLOW, justify='center',
+                           font=('Arial', 16, 'bold'))
+e3.grid(row=4, column=0)
+e3.insert(END,'100')                           
+button = Button(text='quiz',command=openQuizUi)
+button.grid(column=0,row=5)
+
 t = Table(window, row=3, column=1)
 
+#quizformat(window)
 window.mainloop()
