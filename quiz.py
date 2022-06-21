@@ -10,6 +10,8 @@ from tkinter import messagebox as mb
 #import json to use json file for data
 import json
 
+from TimerHandle import timerhandle as th
+
 #class to define the components of the GUI
 class Quiz:
     # This is the first method which is called when a
@@ -49,15 +51,14 @@ class Quiz:
         
         # keep a counter of correct answers
         self.correct=0
-
+        self.timer = th(gui=self.gui,countins=8*60,callback=self.display_result)
 
     # This method is used to display the result
     # It counts the number of correct and wrong answers
     # and then display them at the end as a message Box
     def display_result(self):
-        global timer
-        if timer != None:
-            self.gui.after_cancel(timer)
+        if self.timer != None:
+            self.gui.after_cancel(self.timer)
 
         # calculates the wrong count
         wrong_count = self.data_size - self.correct
@@ -70,7 +71,9 @@ class Quiz:
         
         # Shows a message box to display the result
         mb.showinfo("Result", f"{result}\n{correct}\n{wrong}")
-
+    
+        # destroys the GUI
+        self.gui.destroy()
 
     # This method checks the Answer after we click on Next.
     def check_ans(self, q_no):
@@ -103,8 +106,6 @@ class Quiz:
             # if it is correct then it displays the score
             self.display_result()
             
-            # destroys the GUI
-            self.gui.destroy()
         else:
             # shows the next question
             self.display_question()
@@ -171,9 +172,6 @@ class Quiz:
         title = Label(self.gui, text="UCMAS QUIZ",
         width=50, bg="green",fg="white", font=("ariel", 20, "bold"))
 
-        self.t = Label(self.gui, text='00:00', 
-        font=( 'ariel' ,16, 'bold' ), anchor= 'w' )
-        self.t.place(x=70,y=50)
         # place of the title
         title.place(x=0, y=2)
 

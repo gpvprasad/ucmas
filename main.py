@@ -1,6 +1,6 @@
 from ctypes import alignment
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox as mb
 import random as rd
 import csv
 import pandas as pd
@@ -14,7 +14,7 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-SECOND_MS = 10
+SECOND_MS = 1000
 
 # Python program to create a table
 
@@ -26,11 +26,12 @@ maths_answersheet = {
     'correct answer':[],
     'status':[]
 }
-class Point:
-    target: int
-    lst: list[int]
+
 
 def openQuizUi():
+    class Point:
+        target: int
+        lst: list([])
     var = Point()
     var.target = int(e3.get())
     var.lst = []
@@ -136,7 +137,7 @@ class Table:
         self.timer = self.root.after(SECOND_MS//5, self.insert_table)
 
     def show_score(self):
-        canvas.itemconfig(timer_text, text=f'{self.score}/{self.problems}/{self.target}')
+        mb.showinfo("Result",f"score={self.score}\nattempted={self.problems}\nsolved={self.target}")
         e1.configure(state=NORMAL)
         e2.configure(state=NORMAL)
         df = pd.DataFrame(maths_answersheet)
@@ -145,8 +146,9 @@ class Table:
         k = disp_csv()
 
     def __del__(self):
-        self.root.after_cancel(self.timer)
+        #self.root.after_cancel(self.timer)
         #print("Object deleted")
+        pass
 
 states = {
     '8_1':{'Nextstates': 'ShowResult','values': 8*60}
@@ -161,7 +163,7 @@ def func_reset_count(count=-1,state='Nokey'):
     global timer
     global t
     if int(e2.get())>9:
-        switchtoquiz = messagebox.askokcancel("askokcancel", "Total greater than 9, not possible in this window Want to continue to quiz format?")
+        switchtoquiz = mb.askokcancel("askokcancel", "Total greater than 9, not possible in this window Want to continue to quiz format?")
         if switchtoquiz == 1:
             openQuizUi()
 
