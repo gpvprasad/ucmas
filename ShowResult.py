@@ -38,10 +38,6 @@ class disp_csv:
         with open('test.csv') as f:
             reader = csv.DictReader(f, delimiter=',')
             for row in reader:
-                problem = 'Sum of '+row['problem']
-                answer = row['answer']
-                correct_answer = row['correct answer']
-                status = row['status']
-                tree.insert("", 0, values=(problem, answer, correct_answer),tags=(status,))
+                tree.insert("", 0, values=tuple([row[r] for r in row.keys()]),tags=(row[list(row.keys())[-1]],))
 
 

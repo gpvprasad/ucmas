@@ -3,11 +3,10 @@ from tkinter import *
 from tkinter import messagebox as mb
 import random as rd
 import csv
-import pandas as pd
 from ShowResult import disp_csv
 from quiz import quizformat
 import json
-
+import recordandsave as rs
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -19,14 +18,6 @@ SECOND_MS = 1000
 # Python program to create a table
 
 from tkinter import *
-
-maths_answersheet = {
-    'problem':[],
-    'answer':[],
-    'correct answer':[],
-    'status':[]
-}
-
 
 def openQuizUi():
     class Point:
@@ -52,9 +43,9 @@ def openQuizUi():
                 question += '+'+str(i)
         data['question'].append(question)
         options.append(sum(var.lst))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i != sum(var.lst)]))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i != sum(var.lst)]))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i != sum(var.lst)]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
         rd.shuffle(options)
         data['options'].append(options )
         data['answer'].append(options.index(sum(var.lst))+1)
@@ -94,6 +85,7 @@ class Table:
         self.score = 0
         self.insert_table(True)
         self.target = int(e3.get())
+        self.maths_answersheet = rs.recordandsave(['problem','correct_answer','answer','status'])
         #print('insert table called init')
 
     
@@ -117,32 +109,28 @@ class Table:
             self.ans = Entry(self.root, width=5, fg='blue',bg=YELLOW,justify='center',
                          font=('Arial', 16, 'bold'))
             self.ans.grid(row=total_rows + self.row+1, column=self.column)
+            
         if not starting:
             self.ans.option_clear()
             self.problems += 1
-            maths_answersheet['problem'].append(tuple(self.lst))
-            maths_answersheet['correct answer'].append(sum(self.lst))
-            maths_answersheet['answer'].append('')
-            maths_answersheet['status'].append('X')
+            self.maths_answersheet.addData(problem = tuple(self.lst),correct_answer = sum(self.lst),answer='',status = 'X')
         self.ans.delete(0, END)
 
 
     def key_handler(self,event):
         #print(event.char, event.keysym, event.keycode)
         self.ans.insert(0,event.char)
-        maths_answersheet['answer'][-1]=int(event.char)
+        self.maths_answersheet.modifyLatest(answer=int(event.char))
         if sum(self.lst) == int(event.char):
             self.score +=1
-            maths_answersheet['status'][-1]='✓'
+            self.maths_answersheet.modifyLatest(status = '✓')
         self.timer = self.root.after(SECOND_MS//5, self.insert_table)
 
     def show_score(self):
         mb.showinfo("Result",f"score={self.score}\nattempted={self.problems}\nsolved={self.target}")
         e1.configure(state=NORMAL)
         e2.configure(state=NORMAL)
-        df = pd.DataFrame(maths_answersheet)
-        df.to_csv('test.csv', index = False)
-        #print(maths_answersheet)
+        self.maths_answersheet.saveData()
         k = disp_csv()
 
     def __del__(self):

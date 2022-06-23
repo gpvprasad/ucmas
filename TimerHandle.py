@@ -26,3 +26,6 @@ class timerhandle:
          self.timer = self.root.after(SECOND_MS, self.run_timer)
       else:
          self.callback()
+   
+   def finished(self):
+      self.root.after_cancel(self.timer)

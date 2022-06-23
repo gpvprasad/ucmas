@@ -12,6 +12,9 @@ import json
 
 from TimerHandle import timerhandle as th
 
+import recordandsave as rs
+from ShowResult import disp_csv
+
 #class to define the components of the GUI
 class Quiz:
     # This is the first method which is called when a
@@ -27,6 +30,7 @@ class Quiz:
         self.answer = answer
         self.options = options
         self.gui = gui
+        self.maths_answersheet = rs.recordandsave(['problem','correct_answer','answer','status'])
         
         # assigns ques to the display_question function to update later.
         self.display_title()
@@ -71,7 +75,9 @@ class Quiz:
         
         # Shows a message box to display the result
         mb.showinfo("Result", f"{result}\n{correct}\n{wrong}")
-    
+        self.maths_answersheet.saveData()
+        k = disp_csv()
+        self.timer.finished()
         # destroys the GUI
         self.gui.destroy()
 
@@ -81,7 +87,11 @@ class Quiz:
         # checks for if the selected option is correct
         if self.opt_selected.get() == self.answer[q_no]:
             # if the option is correct it return true
+            
+            self.maths_answersheet.modifyLatest(answer=self.options[q_no][self.opt_selected.get()-1],status = '✓')
             return True
+        else:
+            self.maths_answersheet.modifyLatest(answer=self.options[q_no][self.opt_selected.get()-1])
 
     # This method is used to check the answer of the
     # current question by calling the check_ans and question no.
@@ -153,7 +163,6 @@ class Quiz:
             self.opts[val]['text']=option
             val+=1
 
-
     # This method shows the current Question on the screen
     def display_question(self):
         
@@ -163,6 +172,8 @@ class Quiz:
         
         #placing the option on the screen
         q_no.place(x=70, y=100)
+
+        self.maths_answersheet.addData(problem = self.question[self.q_no],correct_answer = self.options[self.q_no][int(self.answer[self.q_no])-1],answer='',status = 'X')
 
 
     # This method is used to Display Title
