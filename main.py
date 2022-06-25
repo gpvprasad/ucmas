@@ -51,8 +51,8 @@ def openQuizUi():
         data['answer'].append(options.index(sum(var.lst))+1)
     with open("data.json", "w") as outfile:
         json.dump(data, outfile,indent=4)
-    
-    quizformat(window)
+    duration = int(e4.get())
+    quizformat(window,duration)
 
 def ucmactest(self,starting):
     self.target = int(e3.get())
@@ -60,7 +60,7 @@ def ucmactest(self,starting):
         e1.configure(state=DISABLED)
         e2.configure(state=DISABLED)
         e3.configure(state=DISABLED)
-
+        e4.configure(state=DISABLED)
         self.lst = [0]*(int(e1.get())+2)
         finalmaxsum = int(e2.get())
     else:
@@ -127,9 +127,11 @@ class Table:
         self.timer = self.root.after(SECOND_MS//5, self.insert_table)
 
     def show_score(self):
-        mb.showinfo("Result",f"score={self.score}\nattempted={self.problems}\nsolved={self.target}")
+        mb.showinfo("Result",f"score={self.score}\nattempted={self.problems}\nTarget={self.target}")
         e1.configure(state=NORMAL)
         e2.configure(state=NORMAL)
+        e3.configure(state=NORMAL)
+        e4.configure(state=NORMAL)
         self.maths_answersheet.saveData()
         k = disp_csv()
 
@@ -139,7 +141,7 @@ class Table:
         pass
 
 states = {
-    '8_1':{'Nextstates': 'ShowResult','values': 8*60}
+    '8_1':{'Nextstates': 'ShowResult'}
 }
 
 timer = None
@@ -150,6 +152,8 @@ def func_reset_count(count=-1,state='Nokey'):
     #print(f'{count} {state}')
     global timer
     global t
+    start_button["state"] = "disabled"
+    button["state"] = "disabled"
     if int(e2.get())>9:
         switchtoquiz = mb.askokcancel("askokcancel", "Total greater than 9, not possible in this window Want to continue to quiz format?")
         if switchtoquiz == 1:
@@ -169,7 +173,7 @@ def func_reset_count(count=-1,state='Nokey'):
         #print('insert table called first time')
         t.insert_table()
         state = '8_1'
-        count = states[state]['values']
+        count = int(e4.get()) *60
         canvas.itemconfig(timer_text, text=f'{count//60}:00')
         window.bind("<Key>", t.key_handler)
 
@@ -190,6 +194,8 @@ def func_stop():
     del t
     t= None
     mathstution_label.config(text='mathstution')
+    start_button["state"] = "normal"
+    button["state"] = "normal"
 
 window = Tk()
 window.title('mathstution')
@@ -197,18 +203,25 @@ window.config(padx=100,pady=50,bg=YELLOW)
 mathstution_label = Label(text='mathstution',fg = GREEN, font=(FONT_NAME,50,'bold'),bg=YELLOW)
 mathstution_label.grid(row = 0,column=1)
 
-canvas = Canvas(width=200,height=224,bg=YELLOW,highlightthickness=0)
+canvas2 = Canvas(width=200,height=224,bg=YELLOW,highlightthickness=0)
+mathstution_label = Label(canvas2,text='mathsgrade',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
+mathstution_label.place(relx = 0.0,
+                 rely = 1.0,anchor='sw')
+canvas2.grid(row = 1,column=0)
+
+canvas = Canvas(width=200,height=230,bg=YELLOW,highlightthickness=0)
 tomato_img = PhotoImage(file='tomato.png')
 
-mathstution_label = Label(text='mathsgrade',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
-mathstution_label.grid(row = 1,column=0)
 
 canvas.create_image(100,112,image=tomato_img)
 timer_text = canvas.create_text(103,130,text='00:00',fill = 'white',font=(FONT_NAME,35,'bold'))
 canvas.grid(row = 1,column=1,columnspan=2)
 
-mathstution_label = Label(text='max total(1-9)',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
-mathstution_label.grid(row = 1,column=3)
+canvas2 = Canvas(width=275,height=224,bg=YELLOW,highlightthickness=0)
+mathstution_label = Label(canvas2,text='max total\n(1-9)\n >9 \nchoose quizformat',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
+mathstution_label.place(relx = 0.0,
+                 rely = 1.0,anchor='sw')
+canvas2.grid(row = 1,column=3)
 
 e1 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
@@ -220,6 +233,13 @@ e2 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
 e2.grid(row=2, column=3)
 e2.insert(END,'9')
+
+Label(window, 
+         text="Duration in mins").grid(row=3,column=3)
+e4 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
+                           font=('Arial', 16, 'bold'))
+e4.grid(row=4, column=3)
+e4.insert(END,'10')
 
 start_button = Button(text='Start',command=func_reset_count)
 start_button.grid(column=1,row=2)

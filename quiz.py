@@ -22,7 +22,7 @@ class Quiz:
     # sets the question count to 0. and initialize all the
     # other methoods to display the content and make all the
     # functionalities available
-    def __init__(self,gui,question,answer,options):
+    def __init__(self,gui,question,answer,options,duration):
         
         # set question number to 0
         self.q_no=0
@@ -55,7 +55,7 @@ class Quiz:
         
         # keep a counter of correct answers
         self.correct=0
-        self.timer = th(gui=self.gui,countins=8*60,callback=self.display_result)
+        self.timer = th(gui=self.gui,countins=duration*60,callback=self.display_result)
 
     # This method is used to display the result
     # It counts the number of correct and wrong answers
@@ -219,7 +219,7 @@ class Quiz:
         return q_list
 
 
-def quizformat(gui):
+def quizformat(gui,duration):
     gui.destroy()
     gui = Tk()
     # set the size of the GUI Window
@@ -238,7 +238,7 @@ def quizformat(gui):
     answer = (data[ 'answer'])
 
     # create an object of the Quiz Class.
-    quiz = Quiz(gui=gui,question=question,options=options,answer=answer)
+    quiz = Quiz(gui=gui,question=question,options=options,answer=answer,duration=duration)
     #gui.mainloop()
 
 #quizformat(Tk())
