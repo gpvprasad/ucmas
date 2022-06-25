@@ -61,7 +61,7 @@ def ucmactest(self,starting):
         e2.configure(state=DISABLED)
         e3.configure(state=DISABLED)
         e4.configure(state=DISABLED)
-        self.lst = [0]*(int(e1.get())+2)
+        self.lst = [0]*(rd.choice([int(e1.get()),int(e1.get())+1])+2)
         finalmaxsum = int(e2.get())
     else:
         self.lst = [0]*3
