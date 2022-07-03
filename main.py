@@ -7,6 +7,7 @@ from ShowResult import disp_csv
 from quiz import quizformat
 import json
 import recordandsave as rs
+import complement_supplement as cs
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -18,6 +19,16 @@ SECOND_MS = 1000
 # Python program to create a table
 
 from tkinter import *
+
+def validateFunction(a,b,c=5,d=5):
+    if (a+b == 5) and (c+d==10):
+        return ('✓','✓')
+    elif (a+b == 5) and (c+d!=10):
+        return ('✓','X')
+    elif (a+b != 5) and (c+d==10):
+        return ('X','✓')
+    else:
+        return ('X','X')
 
 def openQuizUi():
     class Point:
@@ -197,6 +208,14 @@ def func_stop():
     start_button["state"] = "normal"
     button["state"] = "normal"
 
+complementsummassion = cs.complement_supplement('Complement',validateFunction,'Supplement',10)
+group1=[(i,5-i) for i in range(0,5)]*2
+rd.shuffle(group1)
+group2 = [(i,10-i) for i in range(0,10)]
+rd.shuffle(group2)
+complementsummassion.filldata(group1=group1,group2=group2)
+complementsummassion.startdisplay()
+
 window = Tk()
 window.title('mathstution')
 window.config(padx=100,pady=50,bg=YELLOW)
@@ -252,7 +271,7 @@ e3.grid(row=4, column=0)
 e3.insert(END,'100')                           
 button = Button(text='quiz',command=openQuizUi)
 button.grid(column=0,row=5)
-
+                
 t = Table(window, row=3, column=1)
 
 #quizformat(window)
