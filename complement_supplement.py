@@ -2,8 +2,7 @@ from tkinter import *
 from tkinter import messagebox as mb
 import random as rd
 from turtle import title
-def rgb_hack(rgb):
-    return "#%02x%02x%02x" % rgb  
+from genericfunctions import *
 class complement_supplement:
     def __init__(self,text1,validationfunction,text2=None,noofRows=10,noofColumns=6) -> None:
         if noofColumns %3 !=0:

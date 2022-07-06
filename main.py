@@ -4,10 +4,12 @@ from tkinter import messagebox as mb
 import random as rd
 import csv
 from ShowResult import disp_csv
-from quiz import quizformat
+from quiz import quizformat,openQuizUi
 import json
 import recordandsave as rs
 import complement_supplement as cs
+from genericfunctions import *
+from TimerHandle import timerhandle as th
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -29,58 +31,6 @@ def validateFunction(a,b,c=5,d=5):
         return ('X','✓')
     else:
         return ('X','X')
-
-def openQuizUi():
-    class Point:
-        target: int
-        lst: list([])
-    var = Point()
-    var.target = int(e3.get())
-    var.lst = []
-    options = []
-    data = {
-        "question": [],
-        "answer": [],
-        "options": []
-    }
-    for i in range(var.target):
-        options = []
-        ucmactest(var,False)
-        question = str(var.lst[0])
-        for i in var.lst[1:]:
-            if i<0:
-                question += str(i)
-            else:
-                question += '+'+str(i)
-        data['question'].append(question)
-        options.append(sum(var.lst))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
-        rd.shuffle(options)
-        data['options'].append(options )
-        data['answer'].append(options.index(sum(var.lst))+1)
-    with open("data.json", "w") as outfile:
-        json.dump(data, outfile,indent=4)
-    duration = int(e4.get())
-    quizformat(window,duration)
-
-def ucmactest(self,starting):
-    self.target = int(e3.get())
-    if not starting:
-        e1.configure(state=DISABLED)
-        e2.configure(state=DISABLED)
-        e3.configure(state=DISABLED)
-        e4.configure(state=DISABLED)
-        self.lst = [0]*(rd.choice([int(e1.get()),int(e1.get())+1])+2)
-        finalmaxsum = int(e2.get())
-    else:
-        self.lst = [0]*3
-        finalmaxsum = 9
-    
-    self.lst[0] = rd.randint(0,finalmaxsum)
-    for i in range(1,len(self.lst)):
-        self.lst[i] = rd.randint(-sum(self.lst),finalmaxsum-sum(self.lst))
 
 class Table:
 
@@ -105,7 +55,7 @@ class Table:
         if self.timer != None:
             self.root.after_cancel(self.timer)
         # code for creating table
-        ucmactest(self,starting)
+        ucmactest(self,starting,e1,e2,e3,e4)
         total_rows = len(self.lst)
         #print(total_rows)
         for i in range(total_rows):
@@ -157,7 +107,8 @@ states = {
 
 timer = None
 t = None
-
+def openQuiz():
+    openQuizUi(window,e1,e2,e3,e4)
 def func_reset_count(count=-1,state='Nokey'):
 
     #print(f'{count} {state}')
@@ -168,7 +119,7 @@ def func_reset_count(count=-1,state='Nokey'):
     if int(e2.get())>9:
         switchtoquiz = mb.askokcancel("askokcancel", "Total greater than 9, not possible in this window Want to continue to quiz format?")
         if switchtoquiz == 1:
-            openQuizUi()
+            openQuiz()
 
     if state != 'Nokey' and timer == None:
         canvas.itemconfig(timer_text, text=f'00:00')
@@ -269,7 +220,7 @@ e3 = Entry(window,width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
 e3.grid(row=4, column=0)
 e3.insert(END,'100')                           
-button = Button(text='quiz',command=openQuizUi)
+button = Button(text='quiz',command=openQuiz)
 button.grid(column=0,row=5)
                 
 t = Table(window, row=3, column=1)

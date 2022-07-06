@@ -14,6 +14,7 @@ from TimerHandle import timerhandle as th
 
 import recordandsave as rs
 from ShowResult import disp_csv
+from genericfunctions import *
 
 #class to define the components of the GUI
 class Quiz:
@@ -241,8 +242,38 @@ def quizformat(gui,duration):
     quiz = Quiz(gui=gui,question=question,options=options,answer=answer,duration=duration)
     #gui.mainloop()
 
-#quizformat(Tk())
-# Start the GUI
-#gui.mainloop()
-
+def openQuizUi(window,e1,e2,e3,e4):
+    class Point:
+        target: int
+        lst: list([])
+    var = Point()
+    var.target = int(e3.get())
+    var.lst = []
+    options = []
+    data = {
+        "question": [],
+        "answer": [],
+        "options": []
+    }
+    for i in range(var.target):
+        options = []
+        ucmactest(var,False,e1,e2,e3,e4,True)
+        question = str(var.lst[0])
+        for i in var.lst[1:]:
+            if i<0:
+                question += str(i)
+            else:
+                question += '+'+str(i)
+        data['question'].append(question)
+        options.append(sum(var.lst))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        rd.shuffle(options)
+        data['options'].append(options )
+        data['answer'].append(options.index(sum(var.lst))+1)
+    with open("data.json", "w") as outfile:
+        json.dump(data, outfile,indent=4)
+    duration = int(e4.get())
+    quizformat(window,duration)
 # END OF THE PROGRAM
