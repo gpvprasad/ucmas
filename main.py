@@ -39,7 +39,7 @@ class Table:
         self.row = row
         self.column = column
         self.timer = None
-        self.e = None
+        self.e = []
         self.ans = None
         self.lst = []
         self.problems = 0
@@ -55,27 +55,34 @@ class Table:
         if self.timer != None:
             self.root.after_cancel(self.timer)
         # code for creating table
-        ucmactest(self,starting,e1,e2,e3,e4)
+        ucmactest(self,starting,e1,e2,e3,e4,True)
         total_rows = len(self.lst)
         #print(total_rows)
-        for i in range(total_rows):
-            self.e = Entry(self.root, width=5, fg='blue', bg=YELLOW, justify='center',
-                           font=('Arial', 16, 'bold'))
+        if not starting:
+            for rowno, row in reversed(list(enumerate(self.e))):
+                    self.e[rowno].destroy()
+            self.e = []
 
-            self.e.grid(row=i+self.row, column=self.column)
+        for i in range(total_rows):
+            self.e.append( Entry(self.root, width=5, fg='blue', bg=YELLOW, justify='center',
+                        font=('Arial', 16, 'bold')))
+            print(i,i+self.row,self.column)
+
+            self.e[i].grid(row=i+self.row, column=self.column)
             if not starting:
-                self.e.insert(END, self.lst[i])
-            self.e.configure(state=DISABLED)
+                self.e[i].insert(END, self.lst[i])
+            self.e[i].configure(state=DISABLED)
         if starting:
             self.ans = Entry(self.root, width=5, fg='blue',bg=YELLOW,justify='center',
                          font=('Arial', 16, 'bold'))
             self.ans.grid(row=total_rows + self.row+1, column=self.column)
             
         if not starting:
+            self.ans.grid(row=total_rows + self.row+1, column=self.column)
             self.ans.option_clear()
             self.problems += 1
             self.maths_answersheet.addData(problem = tuple(self.lst),correct_answer = sum(self.lst),answer='',status = 'X')
-        self.ans.delete(0, END)
+            self.ans.delete(0, END)
 
 
     def key_handler(self,event):
