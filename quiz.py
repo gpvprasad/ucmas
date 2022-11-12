@@ -242,7 +242,7 @@ def quizformat(gui,duration):
     quiz = Quiz(gui=gui,question=question,options=options,answer=answer,duration=duration)
     #gui.mainloop()
 
-def openQuizUi(window,e1,e2,e3,e4):
+def openQuizUi(window,e1,e2,e3,e4,ucmacs_typ):
     class Point:
         target: int
         lst: list([])
@@ -257,7 +257,7 @@ def openQuizUi(window,e1,e2,e3,e4):
     }
     for i in range(var.target):
         options = []
-        ucmactest(var,False,e1,e2,e3,e4,True)
+        ucmactest(var,False,e1,e2,e3,e4,ucmacs_typ,True)
         question = str(var.lst[0])
         for i in var.lst[1:]:
             if i<0:

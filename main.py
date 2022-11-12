@@ -55,7 +55,7 @@ class Table:
         if self.timer != None:
             self.root.after_cancel(self.timer)
         # code for creating table
-        ucmactest(self,starting,e1,e2,e3,e4,True)
+        ucmactest(self,starting,e1,e2,e3,e4,v.get(),True)
         total_rows = len(self.lst)
         #print(total_rows)
         if not starting:
@@ -115,7 +115,7 @@ states = {
 timer = None
 t = None
 def openQuiz():
-    openQuizUi(window,e1,e2,e3,e4)
+    openQuizUi(window,e1,e2,e3,e4,v.get())
 def func_reset_count(count=-1,state='Nokey'):
 
     #print(f'{count} {state}')
@@ -198,7 +198,7 @@ canvas2 = Canvas(width=275,height=224,bg=YELLOW,highlightthickness=0)
 mathstution_label = Label(canvas2,text='max total\n(1-9)\n >9 \nchoose quizformat',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
 mathstution_label.place(relx = 0.0,
                  rely = 1.0,anchor='sw')
-canvas2.grid(row = 1,column=3)
+canvas2.grid(row = 0,column=3)
 
 e1 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
@@ -208,9 +208,38 @@ e1.insert(END,'1')
 
 e2 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
                            font=('Arial', 16, 'bold'))
-e2.grid(row=2, column=3)
+e2.grid(row=1, column=3)
 e2.insert(END,'9')
 
+v = IntVar()
+v.set(1)  # initializing the choice, i.e. Python
+def ShowChoice():
+    print(v.get())
+o1 = Canvas()
+o1.create_text(300, 50, text="Summing model", fill="black", font=('Helvetica 15 bold'))
+
+Radiobutton(o1, 
+            text="9+9-9...",
+            padx = 20, 
+            variable=v, 
+            command=ShowChoice,
+            value=0).pack(anchor=W)
+Radiobutton(o1, 
+            text="maxno+9-9...",
+            padx = 20, 
+            variable=v, 
+            command=ShowChoice,
+            value=1).pack(anchor=W)
+
+Radiobutton(o1, 
+            text="maxno+maxno-maxno...",
+            padx = 20, 
+            variable=v, 
+            command=ShowChoice,
+            value=2).pack(anchor=W)
+
+
+o1.grid(row=2, column=3)
 Label(window, 
          text="Duration in mins").grid(row=3,column=3)
 e4 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
