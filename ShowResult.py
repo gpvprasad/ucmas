@@ -19,7 +19,7 @@ class disp_csv:
         TableMargin.pack(side=TOP)
         scrollbarx = Scrollbar(TableMargin, orient=HORIZONTAL)
         scrollbary = Scrollbar(TableMargin, orient=VERTICAL)
-        tree = ttk.Treeview(TableMargin, columns=("problem", "answer", "correct answer","status"), height=400, selectmode="extended", yscrollcommand=scrollbary.set, xscrollcommand=scrollbarx.set)
+        tree = ttk.Treeview(TableMargin, columns=("problem", "correct answer", "answer","status"), height=400, selectmode="extended", yscrollcommand=scrollbary.set, xscrollcommand=scrollbarx.set)
         scrollbary.config(command=tree.yview)
         scrollbary.pack(side=RIGHT, fill=Y)
         scrollbarx.config(command=tree.xview)
