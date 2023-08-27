@@ -1,3 +1,20 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     formats: ipynb,py
+#     text_representation:
+#       extension: .py
+#       format_name: light
+#       format_version: '1.5'
+#       jupytext_version: 1.15.0
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
+import math
 from ctypes import alignment
 from tkinter import *
 from tkinter import messagebox as mb
@@ -22,15 +39,54 @@ SECOND_MS = 1000
 
 from tkinter import *
 
-def validateFunction(a,b,c=5,d=5):
-    if (a+b == 5) and (c+d==10):
+def validateFunction(a,b,c=5,d=5,e=None,f=None):
+    if None == e:
+        if (a+b == 5) and (c+d==10):
+            return ('✓','✓')
+        elif (a+b == 5) and (c+d!=10):
+            return ('✓','X')
+        elif (a+b != 5) and (c+d==10):
+            return ('X','✓')
+        else:
+            return ('X','X')
+    else:
+        if a == b+e:
+            return ('✓')
+        else:
+            return ('X')
+
+complementsummassion = cs.complement_supplement('Complement',validateFunction,'Supplement',10)
+group1=[(i,5-i) for i in range(0,5)]*2
+rd.shuffle(group1)
+group2 = [(i,10-i) for i in range(0,10)]
+rd.shuffle(group2)
+complementsummassion.filldata(group1=group1,group2=group2)
+complementsummassion.startdisplay()
+
+group1 = [(i,10-i) for i in range(1,10)]
+complementsummassion = cs.complement_supplement('Test1',validateFunction,noofRows = len(group1),noofColumns=4)
+complementsummassion.filldata(group1=group1,group2=5)
+complementsummassion.startdisplay()
+
+group1 = [(i,10-i) for i in range(1,10)]
+complementsummassion = cs.complement_supplement('Test2',validateFunction,noofRows = len(group1),noofColumns=5)
+complementsummassion.filldata(group1=group1,group2=10,group3=-5)
+complementsummassion.startdisplay()
+
+
+def validateFunctionMultiplication(a,b,e):
+    if (a*b == e):
         return ('✓','✓')
-    elif (a+b == 5) and (c+d!=10):
-        return ('✓','X')
-    elif (a+b != 5) and (c+d==10):
-        return ('X','✓')
     else:
         return ('X','X')
+
+
+for j in range(1,11):
+    group1 = [(i,10-i) for i in range(1,10)]
+    complementsummassion = cs.complement_supplement('Multiplication '+str(j),validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
+    complementsummassion.filldata(group1=group1,group2=j)
+    complementsummassion.startdisplay()
+
 
 class Table:
 
@@ -166,14 +222,6 @@ def func_stop():
     start_button["state"] = "normal"
     button["state"] = "normal"
 
-complementsummassion = cs.complement_supplement('Complement',validateFunction,'Supplement',10)
-group1=[(i,5-i) for i in range(0,5)]*2
-rd.shuffle(group1)
-group2 = [(i,10-i) for i in range(0,10)]
-rd.shuffle(group2)
-complementsummassion.filldata(group1=group1,group2=group2)
-complementsummassion.startdisplay()
-
 window = Tk()
 window.title('mathstution')
 window.config(padx=100,pady=50,bg=YELLOW)
@@ -258,8 +306,10 @@ e3.grid(row=4, column=0)
 e3.insert(END,'100')                           
 button = Button(text='quiz',command=openQuiz)
 button.grid(column=0,row=5)
-                
+
 t = Table(window, row=3, column=1)
 
 #quizformat(window)
 window.mainloop()
+
+
