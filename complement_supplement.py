@@ -112,4 +112,4 @@ class complement_supplement:
                     self.ent[i+1][2].insert(END,group3) 
                     self.ent[i+1][2].configure(state=DISABLED)
                 self.ent[i+1][self.columnspan-1].configure(state=DISABLED)
-                
+

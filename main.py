@@ -35,9 +35,21 @@ YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
 SECOND_MS = 1000
 
-# Python program to create a table
 
-from tkinter import *
+def func_stop():
+    global timer
+    global t
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text=f'00:00')
+    timer = None
+    t.show_score()
+    #print(t)
+    window.unbind("<Key>")
+    del t
+    t= None
+    mathstution_label.config(text='mathstution')
+    start_button["state"] = "normal"
+    button["state"] = "normal"
 
 def validateFunction(a,b,c=5,d=5,e=None,f=None):
     if None == e:
@@ -55,25 +67,6 @@ def validateFunction(a,b,c=5,d=5,e=None,f=None):
         else:
             return ('X')
 
-complementsummassion = cs.complement_supplement('Complement',validateFunction,'Supplement',10)
-group1=[(i,5-i) for i in range(0,5)]*2
-rd.shuffle(group1)
-group2 = [(i,10-i) for i in range(0,10)]
-rd.shuffle(group2)
-complementsummassion.filldata(group1=group1,group2=group2)
-complementsummassion.startdisplay()
-
-group1 = [(i,10-i) for i in range(1,10)]
-complementsummassion = cs.complement_supplement('Test1',validateFunction,noofRows = len(group1),noofColumns=4)
-complementsummassion.filldata(group1=group1,group2=5)
-complementsummassion.startdisplay()
-
-group1 = [(i,10-i) for i in range(1,10)]
-complementsummassion = cs.complement_supplement('Test2',validateFunction,noofRows = len(group1),noofColumns=5)
-complementsummassion.filldata(group1=group1,group2=10,group3=-5)
-complementsummassion.startdisplay()
-
-
 def validateFunctionMultiplication(a,b,e):
     if (a*b == e):
         return ('✓','✓')
@@ -81,12 +74,84 @@ def validateFunctionMultiplication(a,b,e):
         return ('X','X')
 
 
-for j in range(1,11):
-    group1 = [(i,10-i) for i in range(1,10)]
-    complementsummassion = cs.complement_supplement('Multiplication '+str(j),validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
-    complementsummassion.filldata(group1=group1,group2=j)
+# +
+root = Tk()
+root.geometry("700x350")
+  
+w = LabelFrame(root, text ='Choose Activities', font = "50",padx=20, pady=20) 
+w.pack(pady=20, padx=20)
+  
+CS = IntVar()  
+T1T2 = IntVar()  
+TablesMul = IntVar()
+TestAddSub = IntVar()
+MultiplicationTest = IntVar()
+
+Button1 = Checkbutton(w, text = "Complement & Supplement", 
+                      variable = CS,
+                      onvalue = 1,
+                      offvalue = 0,
+                      height = 2,width =150,anchor="w")
+  
+Button2 = Checkbutton(w, text = "Test 1 (0 = 5-5) & Test 2 (0 = 10-5-5) ",
+                      variable = T1T2,
+                      onvalue = 1,
+                      offvalue = 0,
+                      height = 2,width =150,anchor="w")
+  
+Button3 = Checkbutton(w, text = "Multiplication",
+                      variable = TablesMul,
+                      onvalue = 1,
+                      offvalue = 0,
+                      height = 2,width =150,anchor="w")  
+
+Button4 = Checkbutton(w, text = "Addition substraction test",
+                      variable = TestAddSub,
+                      onvalue = 1,
+                      offvalue = 0,
+                      height = 2,width =150,anchor="w")  
+
+Button5 = Checkbutton(w, text = "Multiplication test",
+                      variable = MultiplicationTest,
+                      onvalue = 1,
+                      offvalue = 0,
+                      height = 2,width =150,anchor="w")  
+Button1.pack()  
+Button2.pack()  
+Button3.pack()
+Button4.pack()
+Button5.pack()
+mainloop() 
+# -
+
+if CS.get() == 1:
+    complementsummassion = cs.complement_supplement('Complement',validateFunction,'Supplement',10)
+    group1=[(i,5-i) for i in range(0,5)]*2
+    rd.shuffle(group1)
+    group2 = [(i,10-i) for i in range(0,10)]
+    rd.shuffle(group2)
+    complementsummassion.filldata(group1=group1,group2=group2)
     complementsummassion.startdisplay()
 
+if T1T2.get() ==1:
+    group1 = [(i,10-i) for i in range(1,10)]
+    T1test = cs.complement_supplement('Test 1 (0 = 5-5)',validateFunction,noofRows = len(group1),noofColumns=4)
+    T1test.filldata(group1=group1,group2=5)
+    group1 = [(i,10-i) for i in range(1,10)]
+    T2test = cs.complement_supplement('Test2 (0 = 10-5-5)',validateFunction,noofRows = len(group1),noofColumns=5)
+    T2test.filldata(group1=group1,group2=10,group3=-5)
+    T1test.startdisplay()
+    T2test.startdisplay()
+
+if TablesMul.get() ==1:
+    for j in range(1,11):
+        group1 = [(i,10-i) for i in range(1,10)]
+        complementsummassion = cs.complement_supplement('Multiplication '+str(j),validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
+        complementsummassion.filldata(group1=group1,group2=j)
+        complementsummassion.startdisplay()
+
+
+# Python program to create a table
 
 class Table:
 
@@ -167,9 +232,10 @@ class Table:
 states = {
     '8_1':{'Nextstates': 'ShowResult'}
 }
-
 timer = None
 t = None
+
+
 def openQuiz():
     openQuizUi(window,e1,e2,e3,e4,v.get())
 def func_reset_count(count=-1,state='Nokey'):
@@ -207,109 +273,98 @@ def func_reset_count(count=-1,state='Nokey'):
         func_stop()
 
 
-def func_stop():
-    global timer
-    global t
-    window.after_cancel(timer)
-    canvas.itemconfig(timer_text, text=f'00:00')
-    timer = None
-    t.show_score()
-    #print(t)
-    window.unbind("<Key>")
-    del t
-    t= None
-    mathstution_label.config(text='mathstution')
-    start_button["state"] = "normal"
-    button["state"] = "normal"
+if TestAddSub.get()==1:
+    window = Tk()
+    window.title('mathstution')
+    window.config(padx=100,pady=50,bg=YELLOW)
+    mathstution_label = Label(text='mathstution',fg = GREEN, font=(FONT_NAME,50,'bold'),bg=YELLOW)
+    mathstution_label.grid(row = 0,column=1)
 
-window = Tk()
-window.title('mathstution')
-window.config(padx=100,pady=50,bg=YELLOW)
-mathstution_label = Label(text='mathstution',fg = GREEN, font=(FONT_NAME,50,'bold'),bg=YELLOW)
-mathstution_label.grid(row = 0,column=1)
+    canvas2 = Canvas(width=200,height=224,bg=YELLOW,highlightthickness=0)
+    mathstution_label = Label(canvas2,text='mathsgrade',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
+    mathstution_label.place(relx = 0.0,
+                     rely = 1.0,anchor='sw')
+    canvas2.grid(row = 1,column=0)
 
-canvas2 = Canvas(width=200,height=224,bg=YELLOW,highlightthickness=0)
-mathstution_label = Label(canvas2,text='mathsgrade',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
-mathstution_label.place(relx = 0.0,
-                 rely = 1.0,anchor='sw')
-canvas2.grid(row = 1,column=0)
+    canvas = Canvas(width=200,height=230,bg=YELLOW,highlightthickness=0)
+    tomato_img = PhotoImage(file='tomato.png')
 
-canvas = Canvas(width=200,height=230,bg=YELLOW,highlightthickness=0)
-tomato_img = PhotoImage(file='tomato.png')
+    canvas.create_image(100,112,image=tomato_img)
+    timer_text = canvas.create_text(103,130,text='00:00',fill = 'white',font=(FONT_NAME,35,'bold'))
+    canvas.grid(row = 1,column=1,columnspan=2)
 
+    canvas2 = Canvas(width=275,height=224,bg=YELLOW,highlightthickness=0)
+    mathstution_label = Label(canvas2,text='max total\n(1-9)\n >9 \nchoose quizformat',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
+    mathstution_label.place(relx = 0.0,
+                     rely = 1.0,anchor='sw')
+    canvas2.grid(row = 0,column=3)
 
-canvas.create_image(100,112,image=tomato_img)
-timer_text = canvas.create_text(103,130,text='00:00',fill = 'white',font=(FONT_NAME,35,'bold'))
-canvas.grid(row = 1,column=1,columnspan=2)
+    e1 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
+                               font=('Arial', 16, 'bold'))
+    e1.grid(row=2, column=0)
+    e1.insert(END,'1')
 
-canvas2 = Canvas(width=275,height=224,bg=YELLOW,highlightthickness=0)
-mathstution_label = Label(canvas2,text='max total\n(1-9)\n >9 \nchoose quizformat',fg = GREEN, font=(FONT_NAME,20,'bold'),bg=YELLOW)
-mathstution_label.place(relx = 0.0,
-                 rely = 1.0,anchor='sw')
-canvas2.grid(row = 0,column=3)
+    e2 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
+                               font=('Arial', 16, 'bold'))
+    e2.grid(row=1, column=3)
+    e2.insert(END,'9')
 
-e1 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
-                           font=('Arial', 16, 'bold'))
-e1.grid(row=2, column=0)
-e1.insert(END,'1')
+    v = IntVar()
+    v.set(1)  # initializing the choice, i.e. Python
+    def ShowChoice():
+        print(v.get())
+    o1 = Canvas()
+    o1.create_text(300, 50, text="Summing model", fill="black", font=('Helvetica 15 bold'))
 
+    Radiobutton(o1, 
+                text="9+9-9...",
+                padx = 20, 
+                variable=v, 
+                command=ShowChoice,
+                value=0).pack(anchor=W)
+    Radiobutton(o1, 
+                text="maxno+9-9...",
+                padx = 20, 
+                variable=v, 
+                command=ShowChoice,
+                value=1).pack(anchor=W)
 
-e2 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
-                           font=('Arial', 16, 'bold'))
-e2.grid(row=1, column=3)
-e2.insert(END,'9')
+    Radiobutton(o1, 
+                text="maxno+maxno-maxno...",
+                padx = 20, 
+                variable=v, 
+                command=ShowChoice,
+                value=2).pack(anchor=W)
 
-v = IntVar()
-v.set(1)  # initializing the choice, i.e. Python
-def ShowChoice():
-    print(v.get())
-o1 = Canvas()
-o1.create_text(300, 50, text="Summing model", fill="black", font=('Helvetica 15 bold'))
+    o1.grid(row=2, column=3)
+    Label(window, 
+             text="Duration in mins").grid(row=3,column=3)
+    e4 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
+                               font=('Arial', 16, 'bold'))
+    e4.grid(row=4, column=3)
+    e4.insert(END,'10')
 
-Radiobutton(o1, 
-            text="9+9-9...",
-            padx = 20, 
-            variable=v, 
-            command=ShowChoice,
-            value=0).pack(anchor=W)
-Radiobutton(o1, 
-            text="maxno+9-9...",
-            padx = 20, 
-            variable=v, 
-            command=ShowChoice,
-            value=1).pack(anchor=W)
+    start_button = Button(text='Start',command=func_reset_count)
+    start_button.grid(column=1,row=2)
 
-Radiobutton(o1, 
-            text="maxno+maxno-maxno...",
-            padx = 20, 
-            variable=v, 
-            command=ShowChoice,
-            value=2).pack(anchor=W)
+    Label(window, 
+             text="Target").grid(row=3,column=0)
+    e3 = Entry(window,width=5, fg='blue', bg=YELLOW, justify='center',
+                               font=('Arial', 16, 'bold'))
+    e3.grid(row=4, column=0)
+    e3.insert(END,'100')                           
+    button = Button(text='quiz',command=openQuiz)
+    button.grid(column=0,row=5)
 
+    t = Table(window, row=3, column=1)
 
-o1.grid(row=2, column=3)
-Label(window, 
-         text="Duration in mins").grid(row=3,column=3)
-e4 = Entry(window, width=5, fg='blue', bg=YELLOW, justify='center',
-                           font=('Arial', 16, 'bold'))
-e4.grid(row=4, column=3)
-e4.insert(END,'10')
+    #quizformat(window)
 
-start_button = Button(text='Start',command=func_reset_count)
-start_button.grid(column=1,row=2)
+    window.mainloop()
 
-Label(window, 
-         text="Target").grid(row=3,column=0)
-e3 = Entry(window,width=5, fg='blue', bg=YELLOW, justify='center',
-                           font=('Arial', 16, 'bold'))
-e3.grid(row=4, column=0)
-e3.insert(END,'100')                           
-button = Button(text='quiz',command=openQuiz)
-button.grid(column=0,row=5)
-
-t = Table(window, row=3, column=1)
-
-#quizformat(window)
-window.mainloop()
-
-
+if TablesMul.get() ==1:
+    for j in range(1,11):
+        group1 = [(i,10-i) for i in range(1,10)]
+        complementsummassion = cs.complement_supplement('Multiplication '+str(j),validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
+        complementsummassion.filldata(group1=group1,group2=j)
+        complementsummassion.startdisplay()
