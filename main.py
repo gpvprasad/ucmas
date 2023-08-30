@@ -36,20 +36,24 @@ FONT_NAME = "Courier"
 SECOND_MS = 1000
 
 
-def func_stop():
-    global timer
-    global t
-    window.after_cancel(timer)
-    canvas.itemconfig(timer_text, text=f'00:00')
-    timer = None
-    t.show_score()
-    #print(t)
-    window.unbind("<Key>")
-    del t
-    t= None
-    mathstution_label.config(text='mathstution')
-    start_button["state"] = "normal"
-    button["state"] = "normal"
+# +
+# Helper functions
+# -
+
+# def func_stop():
+#     global timer
+#     global t
+#     window.after_cancel(timer)
+#     canvas.itemconfig(timer_text, text=f'00:00')
+#     timer = None
+#     t.show_score()
+#     #print(t)
+#     window.unbind("<Key>")
+#     del t
+#     t= None
+#     mathstution_label.config(text='mathstution')
+#     start_button["state"] = "normal"
+#     button["state"] = "normal"
 
 def validateFunction(a,b,c=5,d=5,e=None,f=None):
     if None == e:
@@ -73,6 +77,9 @@ def validateFunctionMultiplication(a,b,e):
     else:
         return ('X','X')
 
+
+# +
+# selection panel
 
 # +
 root = Tk()
@@ -99,7 +106,7 @@ Button2 = Checkbutton(w, text = "Test 1 (0 = 5-5) & Test 2 (0 = 10-5-5) ",
                       offvalue = 0,
                       height = 2,width =150,anchor="w")
   
-Button3 = Checkbutton(w, text = "Multiplication",
+Button3 = Checkbutton(w, text = "Tables 1 to 10",
                       variable = TablesMul,
                       onvalue = 1,
                       offvalue = 0,
@@ -110,18 +117,29 @@ Button4 = Checkbutton(w, text = "Addition substraction test",
                       onvalue = 1,
                       offvalue = 0,
                       height = 2,width =150,anchor="w")  
-
-Button5 = Checkbutton(w, text = "Multiplication test",
+c1 = Frame(w,highlightbackground="green",highlightthickness=2)
+Button5 = Checkbutton(c1, text = "Multiplication test",
                       variable = MultiplicationTest,
                       onvalue = 1,
                       offvalue = 0,
-                      height = 2,width =150,anchor="w")  
+                      height = 2,anchor="w")  
+# Create the entry box
+entry_var = StringVar()
+entry_box = Entry(c1, textvariable=entry_var)
+maxnumber = Label(c1,
+                      text = "enter max multiplication number",highlightbackground="blue",highlightthickness=2)
 Button1.pack()  
 Button2.pack()  
 Button3.pack()
 Button4.pack()
-Button5.pack()
+Button5.grid(row = 0,column=0)
+maxnumber.grid(row = 0,column=1)
+entry_box.grid(row = 0,column=2)
+c1.pack(anchor="w")
 mainloop() 
+
+# +
+# complement supplement
 # -
 
 if CS.get() == 1:
@@ -134,14 +152,18 @@ if CS.get() == 1:
     complementsummassion.startdisplay()
 
 if T1T2.get() ==1:
-    group1 = [(i,10-i) for i in range(1,10)]
+    group1 = [(i,10-i) for i in range(1,11)]
     T1test = cs.complement_supplement('Test 1 (0 = 5-5)',validateFunction,noofRows = len(group1),noofColumns=4)
     T1test.filldata(group1=group1,group2=5)
-    group1 = [(i,10-i) for i in range(1,10)]
+    group1 = [(i,10-i) for i in range(1,11)]
     T2test = cs.complement_supplement('Test2 (0 = 10-5-5)',validateFunction,noofRows = len(group1),noofColumns=5)
     T2test.filldata(group1=group1,group2=10,group3=-5)
     T1test.startdisplay()
     T2test.startdisplay()
+
+# +
+#Tables 1 to 10
+# -
 
 if TablesMul.get() ==1:
     for j in range(1,11):
@@ -151,7 +173,7 @@ if TablesMul.get() ==1:
         complementsummassion.startdisplay()
 
 
-# Python program to create a table
+# Python program to create a table for ucmas test
 
 class Table:
 
@@ -362,9 +384,20 @@ if TestAddSub.get()==1:
 
     window.mainloop()
 
-if TablesMul.get() ==1:
-    for j in range(1,11):
-        group1 = [(i,10-i) for i in range(1,10)]
-        complementsummassion = cs.complement_supplement('Multiplication '+str(j),validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
-        complementsummassion.filldata(group1=group1,group2=j)
-        complementsummassion.startdisplay()
+# +
+# Multiplication of random numbers
+# -
+
+if MultiplicationTest.get() ==1:
+    if len(entry_var.get()) == 0:
+        group1 = [(rd.randint(1, 9),10-i) for i in range(1,10)]
+        complementsummassion = cs.complement_supplement('Multiplication Test',validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
+        complementsummassion.filldata(group1=group1,group2=[rd.randint(1, 10) for i in range(1,10)])
+    else:
+        group1 = [(rd.randint(1, int(entry_var.get())),10-i) for i in range(1,10)]
+        complementsummassion = cs.complement_supplement('Multiplication Test',validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
+        complementsummassion.filldata(group1=group1,group2=[rd.randint(1, int(entry_var.get())) for i in range(1,10)])
+    complementsummassion.startdisplay()
+        
+
+

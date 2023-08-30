@@ -106,10 +106,15 @@ class complement_supplement:
                 todisp = rd.choice(range(0,len(group1[i])))
                 self.ent[i+1][0].insert(END,group1[i][0]) 
                 self.ent[i+1][0].configure(state=DISABLED)
-                self.ent[i+1][1].insert(END,group2) 
+                if isinstance(group2, list):
+                    self.ent[i+1][1].insert(END,group2[i]) 
+                else:
+                    self.ent[i+1][1].insert(END,group2) 
                 self.ent[i+1][1].configure(state=DISABLED)
                 if group3 != None:
                     self.ent[i+1][2].insert(END,group3) 
                     self.ent[i+1][2].configure(state=DISABLED)
                 self.ent[i+1][self.columnspan-1].configure(state=DISABLED)
+
+
 
