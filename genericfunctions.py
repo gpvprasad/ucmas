@@ -7,10 +7,6 @@ def ucmactest(self,starting,e1,e2,e3,e4,ucmacs_typ=0,nextLevel=False):
     finalmaxsum = 9 
     self.target = int(e3.get())
     if not starting:
-        e1.configure(state=DISABLED)
-        e2.configure(state=DISABLED)
-        e3.configure(state=DISABLED)
-        e4.configure(state=DISABLED)
         if(nextLevel == False):
             self.lst = [0]*(int(e1.get())+2)
         else:
