@@ -83,7 +83,7 @@ def validateFunctionMultiplication(a,b,e):
 
 # +
 root = Tk()
-root.geometry("900x400")
+root.geometry("900x450")
   
 w = LabelFrame(root, text ='Choose Activities', font = "50",padx=20, pady=20) 
 w.pack(pady=20, padx=20)
@@ -93,6 +93,7 @@ T1T2 = IntVar()
 TablesMul = IntVar()
 TestAddSub = IntVar()
 MultiplicationTest = IntVar()
+sumOfNNumbers = IntVar()
 
 Button1 = Checkbutton(w, text = "Complement & Supplement", 
                       variable = CS,
@@ -114,15 +115,27 @@ Button3 = Checkbutton(w, text = "Tables 1 to 10",
                       offvalue = 0,
                       height = 2,width =150,anchor="w")  
 Button3.pack()
-
-#addition substraction configuration
-c0 = Frame(w,highlightbackground="green",highlightthickness=2,width=800)
-Button4 = Checkbutton(c0, text = "Addition substraction test",
-                      variable = TestAddSub,
+c0 = Frame(w,highlightbackground="green",highlightthickness=2)
+Button4 = Checkbutton(c0, text = "Sum of N Numbers",
+                      variable = sumOfNNumbers,
                       onvalue = 1,
                       offvalue = 0,
                       height = 2,anchor="w")  
 Button4.grid(row=0,column = 0,rowspan = 2)
+Label(c0,text = "N").grid(row =0,column =1)
+e0 = IntVar(value =10 )
+ex = Entry(c0, width=5, fg='blue', justify='center',textvariable=e0)
+ex.grid(row=1, column=1)
+c0.pack(anchor=W)
+
+#addition substraction configuration
+c0 = Frame(w,highlightbackground="green",highlightthickness=2,width=800)
+Button5 = Checkbutton(c0, text = "Addition substraction test",
+                      variable = TestAddSub,
+                      onvalue = 1,
+                      offvalue = 0,
+                      height = 2,anchor="w")  
+Button5.grid(row=0,column = 0,rowspan = 2)
 Label(c0,text = "maths grade").grid(row =0,column =1)
 
 e1 = IntVar(value =1 )
@@ -175,7 +188,7 @@ Radiobutton(o1,
 o1.grid(row=0, column=5,rowspan=2)
 #multiplication configuration
 c1 = Frame(w,highlightbackground="green",highlightthickness=2,width=800)
-Button5 = Checkbutton(c1, text = "Multiplication test",
+Button6 = Checkbutton(c1, text = "Multiplication test",
                       variable = MultiplicationTest,
                       onvalue = 1,
                       offvalue = 0,
@@ -185,18 +198,13 @@ entry_var = StringVar()
 entry_box = Entry(c1, textvariable=entry_var)
 maxnumber = Label(c1,
                       text = "enter max multiplication number",highlightbackground="blue",highlightthickness=2)
-Button5.grid(row = 0,column=0)
+Button6.grid(row = 0,column=0)
 maxnumber.grid(row = 0,column=1)
 entry_box.grid(row = 0,column=2)
 c1.pack(anchor="w")
 b1 = Button(w,text='Start',command=root.destroy,anchor="w")
 b1.pack()
 mainloop() 
-# -
-
-int(e1.get())
-
-float(e2.get())
 
 # +
 # complement supplement
@@ -231,6 +239,29 @@ if TablesMul.get() ==1:
         complementsummassion = cs.complement_supplement('Multiplication '+str(j),validateFunctionMultiplication,noofRows = len(group1),noofColumns=4)
         complementsummassion.filldata(group1=group1,group2=j)
         complementsummassion.startdisplay()
+
+sumN = 0
+posN =0
+def valSumNnumbers(a,b,c=5,d=5,e=None,f=None):
+    global sumNTest,posN,sumN
+    print(a,b,c,d,e)
+    
+    if e == b+a and posN == e0.get():
+        return ('✓')
+    elif e == b+a:
+        sumN +=posN
+        group1 = [(sumN,1)]
+        posN+=1
+        sumNTest.refershdata(group1=group1,group2=posN)
+        return ('-')
+    else:
+        return ('X')
+if sumOfNNumbers.get() ==1:
+    sumNTest = cs.complement_supplement('Sum of ' +str(e0.get())+' numbers',valSumNnumbers,noofRows=1,noofColumns=4)
+    group1 = [(sumN,1)]
+    posN+=1
+    sumNTest.filldata(group1=group1,group2=posN)
+    sumNTest.startdisplay()
 
 
 # Python program to create a table for ucmas test

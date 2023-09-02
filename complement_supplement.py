@@ -74,6 +74,8 @@ class complement_supplement:
                 value[2].delete(0, END)
                 value[2].insert(END,x[0])
                 value[2].configure(state=DISABLED)
+        if x[0] == '✓' or x[0] == 'X':
+            self.validate_button.configure(state=DISABLED)
     
     def filldata(self,group1:list,group2=None,group3=None):
         if self.columnspan%3 ==0 :
@@ -103,7 +105,6 @@ class complement_supplement:
                     raise NameError("Only two operands needed")
                 if len(group1) != len(self.ent):
                     raise NameError("Mismatch in size")
-                todisp = rd.choice(range(0,len(group1[i])))
                 self.ent[i+1][0].insert(END,group1[i][0]) 
                 self.ent[i+1][0].configure(state=DISABLED)
                 if isinstance(group2, list):
@@ -115,6 +116,24 @@ class complement_supplement:
                     self.ent[i+1][2].insert(END,group3) 
                     self.ent[i+1][2].configure(state=DISABLED)
                 self.ent[i+1][self.columnspan-1].configure(state=DISABLED)
+    def refershdata(self,group1:list,group2=None,group3=None):
+        if self.columnspan == 4:
+            for i in range(0,len(group1)):
+                if type(group1[i])!=tuple:
+                    raise NameError("Only two operands needed")
+                if len(group1) != len(self.ent):
+                    raise NameError("Mismatch in size")
+                self.ent[i+1][0].configure(state="normal")
+                self.ent[i+1][0].delete(0, END)
+                self.ent[i+1][0].insert(END,group1[i][0]) 
+                self.ent[i+1][0].configure(state=DISABLED)
+                self.ent[i+1][1].configure(state="normal")
+                self.ent[i+1][1].delete(0, END)
+                if isinstance(group2, list):
+                    self.ent[i+1][1].insert(END,group2[i]) 
+                else:
+                    self.ent[i+1][1].insert(END,group2) 
+                self.ent[i+1][1].configure(state=DISABLED)
 
 
 
