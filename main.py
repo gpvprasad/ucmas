@@ -244,7 +244,7 @@ sumN = 0
 posN =0
 def valSumNnumbers(a,b,c=5,d=5,e=None,f=None):
     global sumNTest,posN,sumN
-    print(a,b,c,d,e)
+    #print(a,b,c,d,e)
     
     if e == b+a and posN == e0.get():
         return ('✓')
@@ -270,6 +270,7 @@ class Table:
 
     def __init__(self, root,row,column):
         self.root = root
+        self.c0 = Frame(self.root,highlightbackground="green",highlightthickness=2)
         self.row = row
         self.column = column
         self.timer = None
@@ -291,31 +292,32 @@ class Table:
         # code for creating table
         ucmactest(self,starting,e1,e2,e3,e4,v.get(),True)
         total_rows = len(self.lst)
-        #print(total_rows)
+
         if not starting:
+            for slave in self.e:
+                slave.grid_forget()
             self.e = []
-
+        #print(f"Number of items {total_rows} itesms{self.lst} it's sum is {sum(self.lst)}")
         for i in range(total_rows):
-            self.e.append( Entry(self.root, width=5, fg='blue', bg=YELLOW, justify='center',
+            self.e.append( Entry(self.c0, width=5, fg='blue', bg=YELLOW, justify='center',
                         font=('Arial', 16, 'bold')))
-            print(i,i+self.row,self.column)
 
-            self.e[i].grid(row=i+self.row, column=self.column)
+            self.e[i].grid(row=i, column=self.column)
             if not starting:
                 self.e[i].insert(END, self.lst[i])
             self.e[i].configure(state=DISABLED)
         if starting:
-            self.ans = Entry(self.root, width=5, fg='blue',bg=YELLOW,justify='center',
+            self.ans = Entry(self.c0, width=5, fg='blue',bg=YELLOW,justify='center',
                          font=('Arial', 16, 'bold'))
-            self.ans.grid(row=total_rows + self.row+1, column=self.column)
+            self.ans.grid(row=total_rows +1, column=self.column)
             
         if not starting:
-            self.ans.grid(row=total_rows + self.row+1, column=self.column)
+            self.ans.grid(row=total_rows + 1, column=self.column)
             self.ans.option_clear()
             self.problems += 1
             self.maths_answersheet.addData(problem = tuple(self.lst),correct_answer = sum(self.lst),answer='',status = 'X')
             self.ans.delete(0, END)
-
+        self.c0.grid(row= self.row,column = self.column)
 
     def key_handler(self,event):
         #print(event.char, event.keysym, event.keycode)
