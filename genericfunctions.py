@@ -17,9 +17,20 @@ def ucmactest(self,starting,e1,e2,e3,e4,ucmacs_typ=0,nextLevel=False):
             finalmaxsum = 9
     else:
         self.lst = [0]*3
-    self.lst[0] = rd.randint(0,finalmaxsum)
-    if ucmacs_typ == 1:
+    if finalmaxsum >0:
+        self.lst[0] = rd.randint(0,finalmaxsum)
+    else:
+        self.lst[0] = rd.randint(finalmaxsum,-finalmaxsum)
+    if ucmacs_typ == 0:
         finalmaxsum = 9
     for i in range(1,len(self.lst)):
-        self.lst[i] = rd.randint(-sum(self.lst),finalmaxsum-sum(self.lst))
+        nextnumber  = 0
+        while nextnumber == 0:
+            if finalmaxsum >0:
+                nextnumber = rd.randint(-sum(self.lst),finalmaxsum-sum(self.lst))
+            else:
+                nextnumber = rd.randint(finalmaxsum,-finalmaxsum)
+                if sum(self.lst) +nextnumber < finalmaxsum or sum(self.lst) +nextnumber > -finalmaxsum or nextnumber < finalmaxsum or nextnumber > -finalmaxsum:
+                    nextnumber = 0
+        self.lst[i] = nextnumber
     return self.lst

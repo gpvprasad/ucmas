@@ -383,7 +383,7 @@ def func_reset_count(count=-1,state='Nokey'):
 
 if TestAddSub.get()==1:
     window = Tk()
-    if int(e2.get())>9:
+    if int(e2.get())>9 or int(e2.get()) < 0:
         print('opening quiz')
         openQuizUi(window,e1,e2,e3,e4,v.get())
     else:

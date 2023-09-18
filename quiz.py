@@ -266,9 +266,15 @@ def openQuizUi(window,e1,e2,e3,e4,ucmacs_typ):
                 question += '+'+str(i)
         data['question'].append(question)
         options.append(sum(var.lst))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
-        options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        if int(e2.get()) > 0:
+            options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+            options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+            options.append(rd.choice([i for i in range(0,int(e2.get())) if i not in options]))
+        else:
+            options.append(rd.choice([i for i in range(int(e2.get()),-int(e2.get())) if i not in options]))
+            options.append(rd.choice([i for i in range(int(e2.get()),-int(e2.get())) if i not in options]))
+            options.append(rd.choice([i for i in range(int(e2.get()),-int(e2.get())) if i not in options]))
+            
         rd.shuffle(options)
         data['options'].append(options )
         data['answer'].append(options.index(sum(var.lst))+1)
